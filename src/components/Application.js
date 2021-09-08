@@ -5,54 +5,7 @@ import "components/Application.scss";
 
 import DayList from 'components/DayList';
 import Appointment from "components/Appointment/index";
-
-
-const appointments = [
-    {
-      id: 1,
-      time: "12pm",
-    },
-    {
-      id: 2,
-      time: "1pm",
-      interview: {
-        student: "Lydia Miller-Jones",
-        interviewer: {
-          id: 1,
-          name: "Sylvia Palmer",
-          avatar: "https://i.imgur.com/LpaY82x.png",
-        }
-      }
-    },
-    {
-      id: 3,
-      time: "2pm",
-      interview: {
-        student: "Lefrancois Valenskie",
-        interviewer: {
-          id: 2,
-          name: "Tori Malcolm",
-          avatar: "https://i.imgur.com/Nmx0Qxo.png",
-        }
-      }
-    },
-    {
-      id: 4,
-      time: "3pm",
-    },
-    {
-      id: 5,
-      time: "4pm",
-      interview: {
-        student: "Maaz Iqbal",
-        interviewer: {
-          id: 3,
-          name: "Mildred Nazir",
-          avatar: "https://i.imgur.com/T2WwVfS.png",
-        }
-      }
-    }
-  ];
+import getAppointmentsForDay from 'helpers/selectors'
 
 export default function Application(props) {
 
@@ -63,10 +16,13 @@ export default function Application(props) {
     appointments: {}
   });
 
-  const [day, setDay] = useState('Monday');
-  const [days, setDays] = useState([]);
+  const dailyAppointments = getAppointmentsForDay(state, state.day)
 
-  const allAppointments = appointments.map(appointment => {
+  const setDay = day => setState({ ...state, day });
+
+
+
+  const allAppointments = dailyAppointments.map(appointment => {
     return(
       <Appointment
         key={appointment.id}
@@ -78,17 +34,18 @@ export default function Application(props) {
   })
 
   useEffect(() => {
-    axios.get("/api/days").then(response => {
-      console.log(response.data);
-      setDays([...response.data])
+    Promise.all([
+      axios.get('/api/days'),
+      axios.get('/api/appointments'),
+      axios.get('/api/interviewers')
+    ]).then((all) => {
+      setState(prev => ({...prev, days: all[0].data, appointments: all[1].data}))
     })
-
   },[])
 
   return (
     <main className="layout">
       <section className="sidebar">
-        {/* Replace this with the sidebar elements during the "Project Setup & Familiarity" activity. */}
         <img
           className="sidebar--centered"
           src="images/logo.png"
@@ -110,7 +67,6 @@ export default function Application(props) {
 
       </section>
       <section className="schedule">
-        {/* Replace this with the schedule elements durint the "The Scheduler" activity. */}
         {allAppointments}
         <Appointment key="last" time="5pm"/>
       </section>
