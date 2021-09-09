@@ -5,10 +5,21 @@ import "components/Application.scss";
 
 import DayList from 'components/DayList';
 import Appointment from "components/Appointment/index";
-import getAppointmentsForDay from 'helpers/selectors'
-import getInterview from 'helpers/selectorsB'
+import getAppointmentsForDay from 'helpers/selectors_getAppointmetnForDay';
+import getInterview from 'helpers/selectors_getInterview';
+import getInterviewersForDays from 'helpers/selector_getInterviewersForDay';
+import useVisualMode from "hooks/useVisualMode";
+import Empty from "./Appointment/Empty";
 
 export default function Application(props) {
+
+  // const EMPTY = "EMPTY";
+  // const SHOW = "SHOW";
+
+  // const { mode, transition, back } = useVisualMode(
+  //   props.interview ? SHOW : EMPTY
+  // );
+
 
   const [state, setState] = useState({
     day: "Monday",
@@ -18,23 +29,6 @@ export default function Application(props) {
   });
 
   const setDay = day => setState({ ...state, day });
-
-  
-
-  const dailyAppointments = getAppointmentsForDay(state, state.day)
-
-  const allAppointments = dailyAppointments.map(appointment => {
-    const interview = getInterview(state, appointment.interview);
-
-    return(
-      <Appointment
-        key={appointment.id}
-        id={appointment.id}
-        time={appointment.time}
-        interview={interview}
-      />
-    )
-  })
 
   useEffect(() => {
     Promise.all([
@@ -46,6 +40,21 @@ export default function Application(props) {
     })
   },[])
 
+  const dailyAppointments = getAppointmentsForDay(state, state.day)
+
+    const allAppointments = dailyAppointments.map(appointment => {
+      const interview = getInterview(state, appointment.interview);
+      const interviewers = getInterviewersForDays(state, state.day)
+      return(
+        <Appointment
+          key={appointment.id}
+          id={appointment.id}
+          time={appointment.time}
+          interview={interview}
+          interviewers={interviewers}
+        />
+      )
+    })
   return (
     <main className="layout">
       <section className="sidebar">

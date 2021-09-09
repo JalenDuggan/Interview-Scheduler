@@ -2,7 +2,7 @@ export default function getAppointmentsForDay(state, day) {
   //returns an array of appointments for that day
   
   const result = [];
-  if (day) {
+  if (state.days) {
     for (const dayItem of state.days) {
       if (dayItem.name === day) {
         
