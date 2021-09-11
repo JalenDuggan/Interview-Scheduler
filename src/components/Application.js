@@ -13,23 +13,23 @@ import Empty from "./Appointment/Empty";
 
 export default function Application(props) {
 
-  // const EMPTY = "EMPTY";
-  // const SHOW = "SHOW";
-
-  // const { mode, transition, back } = useVisualMode(
-  //   props.interview ? SHOW : EMPTY
-  // );
-
-
+  //state object
   const [state, setState] = useState({
     day: "Monday",
     days: [],
-    appointments: {},
+    appointments: {
+      "1": {
+        id: 1,
+        time: "12pm",
+        interview: null
+      }
+    },
     interviewers: {}
   });
 
   const setDay = day => setState({ ...state, day });
 
+  //calls api
   useEffect(() => {
     Promise.all([
       axios.get('/api/days'),
@@ -39,22 +39,54 @@ export default function Application(props) {
       setState(prev => ({...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data}))
     })
   },[])
-
+  
+  //Creates all appointments from the state
   const dailyAppointments = getAppointmentsForDay(state, state.day)
+  const allAppointments = dailyAppointments.map(appointment => {
+    const interview = getInterview(state, appointment.interview);
+    const interviewers = getInterviewersForDays(state, state.day)
 
-    const allAppointments = dailyAppointments.map(appointment => {
-      const interview = getInterview(state, appointment.interview);
-      const interviewers = getInterviewersForDays(state, state.day)
-      return(
-        <Appointment
-          key={appointment.id}
-          id={appointment.id}
-          time={appointment.time}
-          interview={interview}
-          interviewers={interviewers}
-        />
+    async function bookInterview(id, interview) {
+      // console.log(state);
+      // console.log(id, interview);
+      
+      return (
+        axios.put(`/api/appointments/${id}`, {
+          interview: interview
+        })
+        .then(function (response) {
+          const appointment = {
+            ...state.appointments[id],
+            interview: { ...interview }
+          };
+          const appointments = {
+            ...state.appointments,
+            [id]: appointment
+          };
+          setState({
+            ...state,
+            appointments
+          });
+
+        }).catch(function (error) {
+          console.log(error);
+        })
       )
-    })
+      
+    }
+    
+    return(
+      <Appointment
+        key={appointment.id}
+        id={appointment.id}
+        time={appointment.time}
+        interview={interview}
+        interviewers={interviewers}
+        bookInterview={bookInterview}
+      />
+    )
+  })
+
   return (
     <main className="layout">
       <section className="sidebar">

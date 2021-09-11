@@ -6,6 +6,7 @@ import Form from 'components/Appointment/Form';
 import Header from "components/Appointment/Header";
 import Show from "components/Appointment/Show";
 import Empty from "components/Appointment/Empty";
+import Status from 'components/Appointment/Status';
 import useVisualMode from "hooks/useVisualMode";
 
 export default function Appointment(props) {
@@ -13,10 +14,20 @@ export default function Appointment(props) {
   const EMPTY = "EMPTY";
   const SHOW = "SHOW";
   const CREATE = "CREATE"
+  const SAVING = "SAVING";
   const { mode, transition, back } = useVisualMode(
-    props.interview ? SHOW : EMPTY
+    props.interview  ? SHOW : EMPTY
   );
-
+  
+  async function save(name, interviewer) {
+    const interview = {
+      student: name,
+      interviewer
+    };
+    transition(SAVING)
+    await props.bookInterview(props.id, interview)
+    transition(SHOW)
+  }  
   
   return (
     <article className="appointment">
@@ -32,9 +43,13 @@ export default function Appointment(props) {
       {mode === CREATE && (
         <Form
           interviewers={props.interviewers}
-          onSave={onclick}
+          onSave={save}
           onCancel={() => back()}
-          
+        />
+      )}
+      {mode === SAVING && (
+        <Status 
+          message="Saving! It'll only take a sec!"
         />
       )}
 
