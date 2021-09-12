@@ -39,12 +39,40 @@ export default function Application(props) {
       setState(prev => ({...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data}))
     })
   },[])
+
   
   //Creates all appointments from the state
   const dailyAppointments = getAppointmentsForDay(state, state.day)
   const allAppointments = dailyAppointments.map(appointment => {
     const interview = getInterview(state, appointment.interview);
     const interviewers = getInterviewersForDays(state, state.day)
+    
+    //deletes the appointment
+    async function deleteInterview(id) {
+      return (
+        axios.put(`/api/appointments/${id}`, {
+          interview: "null"
+        })
+        .then(function (response) {
+          const appointment = {
+            ...state.appointments[id],
+            interview: { ...null }
+          };
+          const appointments = {
+            ...state.appointments,
+            [id]: appointment
+          };
+          setState({
+            ...state,
+            appointments
+          });
+
+        }).catch(function (error) {
+          console.log(error);
+        })
+      )
+    }
+
 
     async function bookInterview(id, interview) {
       // console.log(state);
@@ -83,6 +111,7 @@ export default function Application(props) {
         interview={interview}
         interviewers={interviewers}
         bookInterview={bookInterview}
+        deleteInterview={deleteInterview}
       />
     )
   })
