@@ -48,11 +48,16 @@ export default function Application(props) {
     const interviewers = getInterviewersForDays(state, state.day)
     
     //deletes the appointment
-    async function deleteInterview(id) {
-      return (
-        axios.put(`/api/appointments/${id}`, {
-          interview: "null"
-        })
+    function deleteInterview(id) {
+
+      return(
+
+        Promise.all([
+          axios.delete(`/api/appointments/${id}`),
+          axios.put(`/api/appointments/${id}`, {
+            interview: null
+          })
+        ])
         .then(function (response) {
           const appointment = {
             ...state.appointments[id],
@@ -66,15 +71,14 @@ export default function Application(props) {
             ...state,
             appointments
           });
-
-        }).catch(function (error) {
-          console.log(error);
+  
         })
       )
+      
     }
 
 
-    async function bookInterview(id, interview) {
+    function bookInterview(id, interview) {
       // console.log(state);
       // console.log(id, interview);
       
@@ -96,8 +100,6 @@ export default function Application(props) {
             appointments
           });
 
-        }).catch(function (error) {
-          console.log(error);
         })
       )
       
