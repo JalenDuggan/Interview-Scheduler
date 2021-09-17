@@ -9,8 +9,6 @@ import getAppointmentsForDay from 'helpers/selectors_getAppointmetnForDay';
 import getInterview from 'helpers/selectors_getInterview';
 import getInterviewersForDays from 'helpers/selector_getInterviewersForDay';
 import useApplicationData from "hooks/useApplicationData";
-import useVisualMode from "hooks/useVisualMode";
-import Empty from "./Appointment/Empty";
 
 export default function Application(props) {
 
@@ -23,6 +21,7 @@ export default function Application(props) {
 
   //Creates all appointments from the state
   const dailyAppointments = getAppointmentsForDay(state, state.day)
+  
   const allAppointments = dailyAppointments.map(appointment => {
     const interviewers = getInterviewersForDays(state, state.day)
     

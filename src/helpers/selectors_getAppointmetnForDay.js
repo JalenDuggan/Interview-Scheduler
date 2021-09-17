@@ -1,19 +1,8 @@
 export default function getAppointmentsForDay(state, day) {
   //returns an array of appointments for that day
   
-  const result = [];
-  if (state.days) {
-    console.log(state.days);
-    for (const dayItem of state.days) {
-      if (dayItem.name === day) {
-        
-        for (const appointmentNum of dayItem.appointments) {
-          result.push(state.appointments[appointmentNum])
-        }
-        return result;
-      }
-    }
-    return result;
-  }
-  return result;
+  const found = state.days.find(d => day === d.name);
+  if (state.days.length === 0 || found === undefined) return [];
+  return found.appointments.map(id => state.appointments[id]);
+  
 }

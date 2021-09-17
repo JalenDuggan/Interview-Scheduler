@@ -30,33 +30,23 @@ export default function useApplicationData() {
   },[])
 
   function deleteInterview(id) {
-
+    const appointment = {
+      ...state.appointments[id],
+      interview: null 
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+    const days = updateSpots();
     return(
-
-      Promise.all([
-        // axios.put(`/api/appointments/${id}`, {
-        //   // interview: {
-        //   //   interviewer: null,
-        //   //   student: ""
-        //   // }
-        //   interview: null
-        // })
-        axios.delete(`/api/appointments/${id}`)
-      ])
-      .then(function (response) {
-        const appointment = {
-          ...state.appointments[id],
-          interview: { ...null }
-        };
-        const appointments = {
-          ...state.appointments,
-          [id]: appointment
-        };
+      axios.delete(`/api/appointments/${id}`)
+      .then(response => {
         setState({
           ...state,
-          appointments
+          appointments,
+          days
         });
-        updateSpots()
 
       })
     )
@@ -64,39 +54,39 @@ export default function useApplicationData() {
   }
 
   function bookInterview(id, interview) {
-    console.log(state);
-    // console.log(id, interview);
-    
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+    const days = updateSpots('create');
     return (
       axios.put(`/api/appointments/${id}`, {
         interview: interview
       })
       .then(function (response) {
-        const appointment = {
-          ...state.appointments[id],
-          interview: { ...interview }
-        };
-        const appointments = {
-          ...state.appointments,
-          [id]: appointment
-        };
         setState({
           ...state,
-          appointments
+          appointments,
+          days
         });
-        updateSpots()
       })
     )
     
   }
 
-
-  function updateSpots() {
-    Promise.all([
-      axios.get('/api/days'),
-    ]).then((all) => {
-      setState(prev => ({...prev, days: all[0].data}))
-    })
+  function updateSpots(requestType) {
+    const dayIndex = state.days.findIndex(dayObj => dayObj.name === state.day)
+    const days = state.days
+    if (requestType === 'create') {
+      days[dayIndex].spots--
+    } else {
+      days[dayIndex].spots++
+    }
+    return days;
   }
 
   return {
