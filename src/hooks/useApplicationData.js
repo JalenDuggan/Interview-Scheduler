@@ -38,14 +38,12 @@ export default function useApplicationData() {
       ...state.appointments,
       [id]: appointment
     };
-    // const days = updateSpots();
     return(
       axios.delete(`/api/appointments/${id}`)
       .then(response => {
         setState({
           ...state,
           appointments,
-          // days
         });
         updateSpots()
       })
@@ -62,7 +60,6 @@ export default function useApplicationData() {
       ...state.appointments,
       [id]: appointment
     };
-    // const days = updateSpots('create');
     return (
       axios.put(`/api/appointments/${id}`, {
         interview: interview
@@ -71,7 +68,6 @@ export default function useApplicationData() {
         setState({
           ...state,
           appointments,
-          // days
         });
         updateSpots()
       })
