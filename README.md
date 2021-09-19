@@ -12,17 +12,17 @@ The Scheduler client application created using Create React App. Express is the 
 ```sh
 User is able to have multiply appointments depending on the day. With the ability to create an appointment.
 ```
-![Setting Appoinment](https://raw.githubusercontent.com/JalenDuggan/scheduler/master/docs/SettingAppoinment.gif)
+|![Setting Appoinment](https://raw.githubusercontent.com/JalenDuggan/scheduler/master/docs/SettingAppoinment.gif)|
+|:--:| 
+| *User is able to have multiply appointments depending on the day. With the ability to create an appointment.* |
 
-```sh
-User is able to edit and delete appointments created with the amount of spots available updating.
-```
-![Delete Appointment](https://raw.githubusercontent.com/JalenDuggan/scheduler/master/docs/deleteAppointment.gif)
+|![Delete Appointment](https://raw.githubusercontent.com/JalenDuggan/scheduler/master/docs/deleteAppointment.gif)|
+|:--:| 
+| *User is able to edit and delete appointments created with the amount of spots available updating.* |
 
-```sh
-When an error ocurrs the user is shown an error component which brings them back to the previous view.
-```
-![Error Handling](https://raw.githubusercontent.com/JalenDuggan/scheduler/master/docs/ErrorHandling.gif)
+|![Error Handling](https://raw.githubusercontent.com/JalenDuggan/scheduler/master/docs/ErrorHandling.gif)|
+|:--:| 
+| *When an error ocurrs the user is shown an error component which brings them back to the previous view.* |
 
 ## Setup
 
