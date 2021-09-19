@@ -9,9 +9,7 @@ The development focuses on a single page application (SPA) called Interview Sche
 * Storybook, Webpack Dev Server, Jest, Testing Library
 
 The Scheduler client application created using Create React App. Express is the basis for the Scheduler API server application.
-```sh
-User is able to have multiply appointments depending on the day. With the ability to create an appointment.
-```
+
 |![Setting Appoinment](https://raw.githubusercontent.com/JalenDuggan/scheduler/master/docs/SettingAppoinment.gif)|
 |:--:| 
 | *User is able to have multiply appointments depending on the day. With the ability to create an appointment.* |
