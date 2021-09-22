@@ -21,9 +21,13 @@ export default function Form(props) {
     return;
   }
 
-  function validate() {
+  function validate(name, interviewer) {
     if (name === "") {
       setError("Student name cannot be blank");
+      return;
+    }
+    if (!interviewer) {
+      setError("Must select an interviewer");
       return;
     }
     setError("");
@@ -55,7 +59,7 @@ export default function Form(props) {
       <section className="appointment__card-right">
         <section className="appointment__actions">
           <Button danger onClick={cancel}>Cancel</Button>
-          <Button confirm onClick={() => validate(name)}>Save</Button>
+          <Button confirm onClick={() => validate(name, interviewer)}>Save</Button>
         </section>
       </section>
     </main>
