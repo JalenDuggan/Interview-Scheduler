@@ -19,6 +19,7 @@ export default function useApplicationData() {
 
   const setDay = day => setState({ ...state, day });
 
+  // calls api and setState with api data
   useEffect(() => {
     Promise.all([
       axios.get('/api/days'),
@@ -29,6 +30,7 @@ export default function useApplicationData() {
     })
   },[])
 
+  //function that set interview object to null
   function deleteInterview(id) {
     const appointment = {
       ...state.appointments[id],
@@ -51,6 +53,7 @@ export default function useApplicationData() {
     
   }
 
+  // set interview to interview data and id
   function bookInterview(id, interview) {
     const appointment = {
       ...state.appointments[id],
@@ -75,17 +78,7 @@ export default function useApplicationData() {
     
   }
 
-  // function updateSpots(requestType) {
-  //   const dayIndex = state.days.findIndex(dayObj => dayObj.name === state.day)
-  //   const days = state.days
-  //   if (requestType === 'create') {
-  //     days[dayIndex].spots--
-  //   } else {
-  //     days[dayIndex].spots++
-  //   }
-  //   return days;
-  // }
-
+  // updates the number of spots remaining for each interview day
   function updateSpots() {
     Promise.all([
       axios.get('/api/days')
